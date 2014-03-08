@@ -50,8 +50,6 @@ angular.module('IS.MasterModule', [])
     callback = callback || null;
     opts = opts || {};
 
-    console.debug('Master.makeRequest', uri);
-
     $http.get(uri, opts)
 
     .success(function(response, stat) {
