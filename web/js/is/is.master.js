@@ -36,10 +36,6 @@ angular.module('IS.MasterModule', [])
     Shutdown: 'shutdown',
     Activate: 'activate',
     Deactivate: 'deactivate'
-  },
-  Groups: {
-    Earth: IS.Configuration['lg.webctl.group.earth'],
-    StreetView: IS.Configuration['lg.webctl.group.streetview']
   }
 })
 
