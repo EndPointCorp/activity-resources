@@ -9,7 +9,7 @@ if (!IS || !IS.Configuration) {
  * Check for the IS.Connection object.
  */
 if (!IS || !IS.Connection) {
-  console.error("IS.MessageModule depends upon IS.Connection. Load the is.socket library before this module.");
+  console.error("IS.MessageModule depends upon IS.Connection. Load the is.connect library before this module.");
 }
 
 /**
