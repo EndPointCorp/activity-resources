@@ -1,0 +1,52 @@
+#!/usr/bin/env python
+
+
+#$ lg-window-rule --class Xpdf --name asdf --x 1234 --y 0 --w 800 --h 600
+#$ lg-window-rule --class Mplayer --instance foo --x 1234 --y 0 --w 800 --h 600
+
+def parse_arguments():
+    # Parsing the command line arguments
+
+    from sys import argv
+    if len(argv) < 4:
+        print "Wrong number of arguments"
+        exit(2)
+
+    # reading the rest of arguments
+    name = None
+    res = {}
+    for a in argv[1:]:
+        if a.startswith("--"):
+            name = a[2:]
+        else:
+            if name is not None:
+                res[name] = a
+                name = None
+
+    return res
+
+
+if __name__ == "__main__":
+    args = parse_arguments()
+    
+    rule = "{ rule = { %s }, properties = { floating = true, size_hints_honor = false, width = %s, height = %s }, callback = function(c) c:geometry({x=%s, y=%s}) end }" % (
+        ', '.join([('%s = \"%s\"' % (key, value.replace('"', r'\"'))) for key, value in filter(
+                lambda item: item if item[0] in [
+                        "name",
+                        "class",
+                        "instance",
+                        "title",
+                    ] else False,
+                args.items())
+	    ]),
+        args['w'], args['h'],
+        args['x'], args['y'],
+    )
+
+    lua_cmd = "table.insert(awful.rules.rules, 0, %s )" % (rule,)
+    with open('/tmp/window-rule', 'a') as f:
+      f.write(lua_cmd + '\n')
+
+    from subprocess import Popen, PIPE, STDOUT
+    awesome_client = Popen(["awesome-client"], stdin=PIPE, stdout=PIPE, shell=True, stderr=STDOUT)
+    awesome_client.communicate(input=lua_cmd)[0]
